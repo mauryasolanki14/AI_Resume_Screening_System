@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Resume Screener</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0;
+        }
+
+        .container {
+            width: 55%;
+            margin: 60px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: gray;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            height: 120px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        .result {
+            margin-top: 20px;
+            background: #f8f9fc;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .score {
+            font-size: 26px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .green { color: green; }
+        .orange { color: orange; }
+        .red { color: red; }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        #loader {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>🚀 AI Resume Screener</h1>
+    <p class="subtitle">Analyze resume using AI & NLP</p>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="resume" required>
+        <textarea name="job_desc" placeholder="Paste Job Description..." required></textarea>
+        <button type="submit">Analyze Resume</button>
+    </form>
+
+    <div id="loader">Analyzing Resume...</div>
+
+    {% if score %}
+    <div class="result">
+
+        <div class="score 
+            {% if score > 70 %}green
+            {% elif score > 40 %}orange
+            {% else %}red
+            {% endif %}
+        ">
+            Match Score: {{ score }}%
+        </div>
+
+        <h3>✅ Matched Skills</h3>
+        <ul>
+            {% for skill in result.matched_skills %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+
+        <h3>❌ Missing Skills</h3>
+        <ul>
+            {% for skill in result.missing_skills %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+
+        <h3>💡 Suggestions</h3>
+        <ul>
+            {% for s in result.suggestions %}
+            <li>{{ s }}</li>
+            {% endfor %}
+        </ul>
+
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.querySelector("form").onsubmit = function() {
+    document.getElementById("loader").style.display = "block";
+};
+</script>
+
+</body>
+</html>
